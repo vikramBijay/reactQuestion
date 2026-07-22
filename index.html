@@ -529,6 +529,48 @@ function buildCard(it){
     }
     saveProgress();
   });
+  const speakBtn = document.createElement('button');
+  speakBtn.className = 'mark-btn';
+  speakBtn.innerHTML = '🔊 Listen';
+  speakBtn.style.marginRight = '10px';
+  speakBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      speakBtn.innerHTML = '🔊 Listen';
+    } else {
+      const rawText = a(it).replace(/<[^>]+>/g, '').replace(/[*_#`>\-]/g, '').trim();
+      const utterance = new SpeechSynthesisUtterance(rawText);
+      // Force language to Hindi/Indian English so browser defaults to it if voice search fails
+      utterance.lang = 'hi-IN';
+      
+      // Find an Indian female voice for better Hinglish pronunciation
+      const voices = window.speechSynthesis.getVoices();
+      let bestVoice = voices.find(v => 
+        (v.lang.includes('IN') || v.lang.includes('hi')) && 
+        (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('heera') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('aditi') || v.name.toLowerCase().includes('veena') || v.name.toLowerCase().includes('lekha'))
+      );
+      
+      // Fallback to any Indian voice
+      if (!bestVoice) {
+        bestVoice = voices.find(v => v.lang.includes('IN') || v.lang.includes('hi') || v.name.includes('India'));
+      }
+      // Fallback to any Female voice
+      if (!bestVoice) {
+        bestVoice = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira'));
+      }
+      
+      if (bestVoice) {
+          utterance.voice = bestVoice;
+      }
+      
+      utterance.onend = () => { speakBtn.innerHTML = '🔊 Listen'; };
+      speakBtn.innerHTML = '⏸ Stop';
+      window.speechSynthesis.speak(utterance);
+    }
+  });
+  inner.appendChild(speakBtn);
+  
   inner.appendChild(markBtn);
   body.appendChild(inner);
 
