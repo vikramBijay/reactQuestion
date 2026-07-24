@@ -1,0 +1,122 @@
+# 🗺️ Roadmap — Gemini ke liye kaam karne ka sahi tarika
+
+> Yeh roadmap banaya hai taaki aage ek bhi feature galat na ho, questions gayab na ho, aur baar baar same kaam repeat na ho.
+
+---
+
+## 📁 Current Project Structure (Clean State)
+
+| File | Role | Status |
+|---|---|---|
+| `index.html` | Main app — HTML + CSS + JS sab ek file mein | ✅ Active |
+| `reactQuestions.js` | React ke 100+ Q&A (REACT_DATA array) | ✅ Active |
+| `pythonQuestions.js` | Python ke Q&A (PYTHON_DATA array) | ✅ Active |
+| `.git/` | Version control | ✅ Active |
+
+---
+
+## 🚫 Rule #1 — Git se DOOR raho jab tak user na bole
+
+Jab bhi koi feature change karna ho:
+- **SIRF** `index.html`, `reactQuestions.js`, `pythonQuestions.js` mein kaam karo
+- `git restore`, `git status`, `git add`, `git commit` — yeh commands **KABHI MAT CHALAAO** jab tak user specifically "push kar do" ya "git" ka mention kare
+- Git restore se user ka edited file wapas purana ho jaata hai — **yahi sabse badi galti thi**
+
+---
+
+## 🚫 Rule #2 — Helper scripts chhodo mat
+
+Maine is session mein yeh files chhoddi jo kisi kaam ki nahi thi:
+- `fix_all.js`, `fix_all.py`, `extract_js.py`, `test.js`, `test_json.py`, `test_logic.py`
+
+**Rule:** Agar koi helper script banao, kaam karne ke turant baad delete karo. User ke project mein garbage mat chhodo.
+
+---
+
+## ✅ Rule #3 — Pehle file padho, phir edit karo
+
+`index.html` ek badi file hai. Koi bhi change karne se pehle:
+1. `view_file` se exact line numbers dekho
+2. Replace karne wala exact text copy karo (whitespace including)
+3. Phir `replace_file_content` karo
+
+Aur har replacement ke baad ek **verification** zaroor karo:
+```
+node -e "const h = require('fs').readFileSync('index.html','utf8'); console.log(h.includes('KUCH_CHEEZ'));"
+```
+
+---
+
+## ✅ Rule #4 — Ek kaam ek baar mein theek se karo
+
+Is session mein hua yeh tha:
+- Ek feature ke liye 5-6 attempts kiye
+- Har attempt mein naya script banate gaye
+- File corrupt hoti gayi
+
+**Sahi approach:**
+1. Pehle `view_file` se exact content padho
+2. Ek hi baar mein `replace_file_content` karo with exact match
+3. Verify karo
+4. Done
+
+---
+
+## 🗺️ Next Features — Priority Order
+
+### Priority 1 — Edit Answer Button (LocalStorage)
+- Har card mein ek ✏️ Edit button add karna hai
+- Click karne pe answer edit ho
+- Save karne pe `localStorage` mein save ho
+- LocalStorage se read karo aur original answer override karo
+- **No database needed — bilkul free**
+
+**Implementation plan:**
+```js
+// localStorage key: `edit-${cardKey(it)}`
+// On card build: check localStorage, use override if exists
+// Edit button: replaces .card-body-inner with <textarea>
+// Save button: localStorage.setItem, re-render the text
+```
+
+### Priority 2 — GitHub Pages Deploy
+```bash
+git add .
+git commit -m "add dropdowns and speaker"
+git push
+```
+Phir GitHub repo > Settings > Pages > Branch: main > Save
+
+### Priority 3 — Dark/Light Mode Toggle
+
+### Priority 4 — Bookmark / Favorite Cards
+
+---
+
+## ⚙️ How DATA loads (important to remember)
+
+```html
+<script src="reactQuestions.js"></script>   <!-- defines REACT_DATA -->
+<script src="pythonQuestions.js"></script>  <!-- defines PYTHON_DATA -->
+<script>const DATA = [...REACT_DATA, ...PYTHON_DATA];</script>
+<script>
+  // Sab logic yahan hai
+  // TOPIC variable controls which questions show
+  // LANG variable controls hi/en answers
+</script>
+```
+
+Yeh 3 script tags ka order **exact** rehna chahiye. Iska matlab:
+- `reactQuestions.js` aur `pythonQuestions.js` pehle load hona chahiye
+- `DATA` merge baad mein
+
+---
+
+## 📋 Checklist — Koi bhi feature add karne se pehle
+
+- [ ] User ki exact requirement samajh li?
+- [ ] Relevant file padh li? (`view_file` use kiya?)
+- [ ] Ek hi attempt mein kaam kiya?
+- [ ] Verification kiya ki page break nahi hua?
+- [ ] Helper scripts delete kiye?
+- [ ] Git chheda nahi jab tak user ne nahi bola?

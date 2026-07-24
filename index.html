@@ -89,33 +89,23 @@
     margin: 22px 0 14px;
     font-style: italic;
   }
-
-  .lang-toggle{
-    display:flex;
-    margin-top: 20px;
+  .dropdown-select {
+    width: 100%;
     background: var(--surface);
     border: 1px solid var(--rule);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px;
     border-radius: 4px;
-    padding: 3px;
-    gap: 3px;
-  }
-  .lang-btn{
-    flex:1;
-    background: transparent;
-    border:none;
-    color: var(--muted);
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    padding: 7px 6px;
-    border-radius: 3px;
     cursor: pointer;
-    transition: background .15s ease, color .15s ease;
+    outline: none;
+    margin-top: 16px;
   }
-  .lang-btn:hover{ color: var(--paper); }
-  .lang-btn.active{
-    background: var(--amber-dim);
-    color: var(--amber);
+  .dropdown-select:focus {
+    border-color: var(--amber);
   }
+
 
   .search-wrap{
     position: relative;
@@ -349,11 +339,16 @@
   <aside class="rail">
     <div class="brand"><span class="mark">Revision Box</span><span class="sub">/react</span></div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;">236 cards · doc + added answers</div>
+    <select id="lang-select" class="dropdown-select" aria-label="Language">
+      <option value="hi">Hinglish</option>
+      <option value="en">English</option>
+    </select>
+    
+    <select id="topic-select" class="dropdown-select" aria-label="Topic" style="margin-top:12px;">
+      <option value="react">React</option>
+      <option value="python">Python</option>
+    </select>
 
-    <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Language">
-      <button class="lang-btn active" data-lang="hi" type="button">Hinglish</button>
-      <button class="lang-btn" data-lang="en" type="button">English</button>
-    </div>
     
     <div class="lang-toggle" id="topic-toggle" role="group" aria-label="Topic" style="margin-top:12px;">
       <button class="lang-btn active" data-topic="react" type="button">React</button>
@@ -392,7 +387,9 @@
   </main>
 </div>
 
-<script src="data.js"></script>
+<script src="reactQuestions.js"></script>
+<script src="pythonQuestions.js"></script>
+<script>const DATA = [...REACT_DATA, ...PYTHON_DATA];</script>
 <script>
 // DATA is defined in data.js
 
@@ -649,18 +646,16 @@ function setupScrollSpy(){
 
 // ---- language & topic toggle ----
 let TOPIC = 'react';
-document.querySelectorAll('.lang-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    if(btn.dataset.lang) {
-      LANG = btn.dataset.lang;
-      document.querySelectorAll('#lang-toggle .lang-btn').forEach(b=>b.classList.toggle('active', b===btn));
-    } else if (btn.dataset.topic) {
-      TOPIC = btn.dataset.topic;
-      document.querySelectorAll('#topic-toggle .lang-btn').forEach(b=>b.classList.toggle('active', b===btn));
-    }
-    renderContent();
-    if(searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
-  });
+document.getElementById('lang-select').addEventListener('change', (e) => {
+  LANG = e.target.value;
+  renderContent();
+  if(searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+});
+
+document.getElementById('topic-select').addEventListener('change', (e) => {
+  TOPIC = e.target.value;
+  renderContent();
+  if(searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
 });
 
 // ---- initial render (after all helpers above are defined) ----
