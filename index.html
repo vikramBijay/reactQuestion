@@ -6,353 +6,130 @@
 <title>React Revision Box — 236 Interview Cards</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #0F1115;
-    --bg-warm: #14120F;
-    --surface: #1A1C22;
-    --surface-2: #20232B;
-    --card: #1D1B18;
-    --card-line: #33302A;
-    --paper: #ECE7DC;
-    --paper-dim: #A9A399;
-    --muted: #837D72;
-    --amber: #F0A63A;
-    --amber-dim: #6b5325;
-    --green: #7FBF8F;
-    --green-dim: #35452f;
-    --rule: #2C2A26;
-    --tab-w: 300px;
-  }
-
-  *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-  body{
-    margin:0;
-    background: var(--bg);
-    background-image:
-      radial-gradient(1200px 600px at 85% -10%, rgba(240,166,58,0.06), transparent 60%),
-      radial-gradient(900px 500px at -10% 110%, rgba(127,191,143,0.05), transparent 60%);
-    color: var(--paper);
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  ::selection{ background: var(--amber); color: #1a1a1a; }
-
-  a{ color: inherit; }
-
-  /* ---------- Layout shell ---------- */
-  .shell{
-    display: grid;
-    grid-template-columns: var(--tab-w) 1fr;
-    min-height: 100vh;
-  }
-
-  /* ---------- Sidebar (card-catalog rail) ---------- */
-  .rail{
-    position: sticky;
-    top:0;
-    height: 100vh;
-    overflow-y: auto;
-    background: var(--bg-warm);
-    border-right: 1px solid var(--rule);
-    padding: 28px 20px 40px;
-  }
-  .rail::-webkit-scrollbar{ width: 8px; }
-  .rail::-webkit-scrollbar-thumb{ background: #2c2924; border-radius: 4px; }
-
-  .brand{
-    display:flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-  .brand .mark{
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 26px;
-    color: var(--amber);
-    letter-spacing: -0.01em;
-  }
-  .brand .sub{
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-  }
-  .rail-title{
-    font-family: 'Fraunces', serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--paper-dim);
-    margin: 22px 0 14px;
-    font-style: italic;
-  }
-  .dropdown-select {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    color: var(--paper);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    outline: none;
-    margin-top: 16px;
-  }
-  .dropdown-select:focus {
-    border-color: var(--amber);
-  }
-
-
-  .search-wrap{
-    position: relative;
-    margin-bottom: 22px;
-  }
-  .search-wrap input{
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    color: var(--paper);
-    padding: 10px 12px 10px 32px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
-    outline: none;
-    transition: border-color .15s ease;
-  }
-  .search-wrap input:focus{ border-color: var(--amber); }
-  .search-wrap input::placeholder{ color: var(--muted); }
-  .search-wrap svg{
-    position:absolute; left:10px; top:50%; transform: translateY(-50%);
-    width:14px; height:14px; stroke: var(--muted);
-  }
-
-  .progress-block{
-    border: 1px dashed var(--card-line);
-    border-radius: 4px;
-    padding: 12px 14px;
-    margin-bottom: 24px;
-  }
-  .progress-row{
-    display:flex; justify-content: space-between; align-items:baseline;
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--muted); margin-bottom:8px;
-  }
-  .progress-row b{ color: var(--paper); font-size: 13px; }
-  .progress-bar{
-    height: 5px; background: var(--surface-2); border-radius: 3px; overflow:hidden;
-  }
-  .progress-bar-fill{
-    height:100%; background: linear-gradient(90deg, var(--amber), var(--green));
-    width:0%; transition: width .3s ease;
-  }
-
-  .tabs{
-    display:flex; flex-direction:column; gap: 3px;
-  }
-  .tab-btn{
-    display:flex; align-items:center; justify-content: space-between; gap: 8px;
-    background: transparent; border: none; color: var(--paper-dim);
-    text-align:left; padding: 9px 10px; border-radius: 3px;
-    font-family: 'Inter', sans-serif; font-size: 13px; cursor:pointer;
-    border-left: 2px solid transparent;
-    transition: background .12s ease, color .12s ease, border-color .12s ease;
-  }
-  .tab-btn:hover{ background: var(--surface); color: var(--paper); }
-  .tab-btn.active{
-    background: var(--surface-2);
-    color: var(--amber);
-    border-left-color: var(--amber);
-  }
-  .tab-btn .n{
-    font-family:'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted);
-    background: var(--surface-2); padding: 1px 6px; border-radius: 8px;
-  }
-  .tab-btn.active .n{ color: var(--amber); }
-
-  .tab-divider{
-    margin: 16px 0 6px; font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase;
-  }
-
-  /* ---------- Main ---------- */
-  .main{ padding: 48px 56px 100px; max-width: 980px; }
-
-  .hero{ margin-bottom: 46px; }
-  .hero .eyebrow{
-    font-family:'JetBrains Mono', monospace; font-size: 12px; color: var(--amber);
-    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .hero .eyebrow::before{
-    content:''; width: 22px; height:1px; background: var(--amber);
-  }
-  .hero h1{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: clamp(34px, 4.4vw, 52px);
-    line-height: 1.06;
-    margin: 0 0 16px;
-    letter-spacing: -0.015em;
-  }
-  .hero h1 em{ color: var(--amber); font-style: normal; }
-  .hero p{
-    max-width: 640px;
-    color: var(--paper-dim);
-    font-size: 15.5px;
-    line-height: 1.65;
-    margin: 0 0 22px;
-  }
-  .legend{ display:flex; gap: 18px; flex-wrap: wrap; }
-  .legend span{
-    display:inline-flex; align-items:center; gap:7px;
-    font-family:'JetBrains Mono', monospace; font-size:11.5px; color: var(--muted);
-  }
-  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; }
-  .dot.doc{ background: var(--green); }
-  .dot.new{ background: var(--amber); }
-
-  .section-head{
-    display:flex; align-items:baseline; gap:14px;
-    margin: 46px 0 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--rule);
-  }
-  .section-head h2{
-    font-family:'Fraunces', serif; font-weight:600; font-size: 22px; margin:0;
-  }
-  .section-head .count{
-    font-family:'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted);
-  }
-
-  .card{
-    background: var(--card);
-    border: 1px solid var(--card-line);
-    border-radius: 6px;
-    margin-bottom: 12px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color .15s ease;
-  }
-  .card::before{
-    content:'';
-    position:absolute; left:0; top:0; bottom:0; width:3px;
-    background: var(--card-line);
-    transition: background .15s ease;
-  }
-  .card.doc::before{ background: var(--green-dim); }
-  .card.written::before{ background: var(--amber-dim); }
-  .card.reviewed::before{ background: var(--paper-dim); }
-  .card:hover{ border-color: #46423a; }
-
-  .card-head{
-    display:flex; align-items:flex-start; gap: 14px;
-    padding: 16px 18px 16px 20px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .card-num{
-    font-family:'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
-    flex-shrink:0; padding-top: 2px; min-width: 28px;
-  }
-  .card-q{
-    flex:1;
-    font-family:'Inter', sans-serif; font-weight: 600; font-size: 15px; color: var(--paper);
-    line-height: 1.45;
-  }
-  .card-meta{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
-  .badge{
-    font-family:'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing:.03em;
-    padding: 3px 8px; border-radius: 10px; white-space:nowrap;
-    text-transform: uppercase;
-  }
-  .badge.doc{ background: var(--green-dim); color: var(--green); }
-  .badge.written{ background: var(--amber-dim); color: var(--amber); }
-
-  .chev{
-    width: 16px; height:16px; flex-shrink:0; margin-top:2px;
-    stroke: var(--muted); transition: transform .18s ease;
-  }
-  .card.open .chev{ transform: rotate(90deg); stroke: var(--amber); }
-
-  .card-body{
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .25s ease;
-  }
-  .card.open .card-body{ max-height: 1400px; }
-  .card-body-inner{
-    padding: 0 20px 20px 62px;
-    color: var(--paper-dim);
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .card-body-inner p{ margin: 0 0 10px; }
-  .card-body-inner ul{ margin: 6px 0 10px; padding-left: 18px; }
-  .card-body-inner li{ margin-bottom: 5px; }
-  .card-body-inner code{
-    font-family:'JetBrains Mono', monospace; font-size: 12.5px;
-    background: var(--surface-2); color: var(--amber);
-    padding: 1px 5px; border-radius: 3px;
-  }
-  .card-body-inner strong{ color: var(--paper); }
-
-  .mark-btn{
-    display:inline-flex; align-items:center; gap:6px;
-    margin-top: 8px;
-    background: none; border: 1px solid var(--card-line); color: var(--muted);
-    font-family:'JetBrains Mono', monospace; font-size: 11px;
-    padding: 6px 10px; border-radius: 3px; cursor:pointer;
-    transition: all .15s ease;
-  }
-  .mark-btn:hover{ border-color: var(--paper-dim); color: var(--paper); }
-  .card.reviewed .mark-btn{ border-color: var(--green); color: var(--green); }
-
-  .empty-state{
-    text-align:center; padding: 80px 20px; color: var(--muted);
-    font-family:'JetBrains Mono', monospace; font-size: 13px;
-  }
-
-  footer{
-    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--rule);
-    color: var(--muted); font-size: 12px; font-family:'JetBrains Mono', monospace;
-  }
-
-  @media (max-width: 860px){
-    .shell{ grid-template-columns: 1fr; }
-    .rail{ position: relative; height:auto; border-right:none; border-bottom:1px solid var(--rule); }
-    .main{ padding: 32px 22px 80px; }
-  }
-
-  :focus-visible{ outline: 2px solid var(--amber); outline-offset: 2px; }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ transition: none !important; scroll-behavior: auto !important; }
-  }
-</style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell">
+<div id="home-view" class="page-home relative">
+  <div class="overlay"></div>
+  <div class="container">
+      <div class="page-title home text-center">
+        <span class="heading-page">Revision Box</span>
+        <p class="mt20">Select a topic to start your interview preparation.</p>
+      </div>
+
+      <div class="hexagon-menu clear">
+          <div class="hexagon-item" data-topic="react">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fab fa-react"></i></span>
+                      <span class="title">React</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>
+          </div>
+          <div class="hexagon-item" data-topic="python">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fab fa-python"></i></span>
+                      <span class="title">Python</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>
+          </div>
+          <div class="hexagon-item" data-topic="html">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fab fa-html5"></i></span>
+                      <span class="title">HTML</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>    
+          </div>
+          <div class="hexagon-item" data-topic="css">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fab fa-css3-alt"></i></span>
+                      <span class="title">CSS</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>
+          </div>
+          <div class="hexagon-item" data-topic="js">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fab fa-js"></i></span>
+                      <span class="title">JavaScript</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>
+          </div>
+          <div class="hexagon-item" data-topic="numpy">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fas fa-calculator"></i></span>
+                      <span class="title">NumPy</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>
+          </div>
+          <div class="hexagon-item" data-topic="upcoming">
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <div class="hex-item"><div></div><div></div><div></div></div>
+              <a class="hex-content">
+                  <span class="hex-content-inner">
+                      <span class="icon"><i class="fas fa-lock"></i></span>
+                      <span class="title">Upcoming</span>
+                  </span>
+                  <svg viewBox="0 0 173.20508075688772 200" height="200" width="174" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M86.60254037844386 0L173.20508075688772 50L173.20508075688772 150L86.60254037844386 200L0 150L0 50Z" fill="#1E1E1E"></path></svg>
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div id="app-view" class="shell" style="display: none;">
   <aside class="rail">
     <div class="brand"><span class="mark">Revision Box</span><span class="sub">/react</span></div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;">236 cards · doc + added answers</div>
-    <select id="lang-select" class="dropdown-select" aria-label="Language">
-      <option value="hi">Hinglish</option>
-      <option value="en">English</option>
-    </select>
-    
-    <select id="topic-select" class="dropdown-select" aria-label="Topic" style="margin-top:12px;">
-      <option value="react">React</option>
-      <option value="python">Python</option>
-    </select>
+    <div class="mac-dropdown" id="lang-dropdown">
+      <div class="mac-dropdown-trigger">
+        <span class="mac-dropdown-value">English</span>
+        <svg class="mac-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="mac-dropdown-menu">
+        <div class="mac-dropdown-item active" data-value="en">English</div>
+        <div class="mac-dropdown-item" data-value="hi">Hinglish</div>
+      </div>
+    </div>
 
-    
-    <div class="lang-toggle" id="topic-toggle" role="group" aria-label="Topic" style="margin-top:12px;">
-      <button class="lang-btn active" data-topic="react" type="button">React</button>
-      <button class="lang-btn" data-topic="python" type="button">Python</button>
+    <div class="mac-dropdown" id="topic-dropdown" style="margin-top:12px;">
+      <div class="mac-dropdown-trigger">
+        <span class="mac-dropdown-value">React</span>
+        <svg class="mac-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="mac-dropdown-menu">
+        <div class="mac-dropdown-item active" data-value="react">React</div>
+        <div class="mac-dropdown-item" data-value="python">Python</div>
+      </div>
     </div>
 
     <div class="search-wrap" style="margin-top:16px;">
@@ -370,6 +147,24 @@
   </aside>
 
   <main class="main">
+    <!-- Apple Loader Overlay -->
+    <div id="apple-loader" class="apple-loader hidden">
+      <svg class="apple-spinner" viewBox="0 0 50 50">
+        <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
+      </svg>
+    </div>
+
+    <div class="mac-titlebar">
+      <div style="display: flex; gap: 8px;">
+        <div class="mac-dot red"></div>
+        <div class="mac-dot yellow"></div>
+        <div class="mac-dot green"></div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="home-btn" class="mac-action-btn" title="Back to Honeycomb Menu">🏠 Home</button>
+        <button id="random-btn" class="mac-action-btn" title="Surprise Me (Random Unreviewed Question)">🎲 Random</button>
+      </div>
+    </div>
     <div class="hero">
       <div class="eyebrow">React & Python interview prep</div>
       <h1>Every card from your<br><em>notebook</em>, in one box.</h1>
@@ -390,277 +185,6 @@
 <script src="reactQuestions.js"></script>
 <script src="pythonQuestions.js"></script>
 <script>const DATA = [...REACT_DATA, ...PYTHON_DATA];</script>
-<script>
-// DATA is defined in data.js
-
-let LANG = 'hi';
-function q(it){ return LANG === 'en' ? it.question_en : it.question_hi; }
-function a(it){ return LANG === 'en' ? it.answer_en : it.answer_hi; }
-
-// ---- markdown-lite renderer for answers ----
-function renderAnswer(md){
-  const lines = md.split('\n');
-  let html = '';
-  let inList = false;
-  const inline = (s) => s
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  for(let raw of lines){
-    const line = raw.trim();
-    if(!line){ continue; }
-    if(line.startsWith('- ')){
-      if(!inList){ html += '<ul>'; inList = true; }
-      html += `<li>${inline(line.slice(2))}</li>`;
-    } else {
-      if(inList){ html += '</ul>'; inList = false; }
-      html += `<p>${inline(line)}</p>`;
-    }
-  }
-  if(inList) html += '</ul>';
-  return html;
-}
-
-// ---- category order & grouping ----
-
-const STORAGE_KEY = 'react-revision-progress-v1';
-let reviewed = new Set();
-try{
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(raw) reviewed = new Set(JSON.parse(raw));
-}catch(e){}
-
-function saveProgress(){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify([...reviewed])); }catch(e){}
-  updateProgressUI();
-}
-
-function cardKey(it){ return it.category + '|' + (it.num||'') + '|' + it.question_hi; }
-
-function updateProgressUI(){
-  const topicData = DATA.filter(it => it.topic === TOPIC);
-  const total = topicData.length;
-  const done = [...reviewed].filter(k => topicData.some(it => cardKey(it)===k)).length;
-  document.getElementById('progress-count').textContent = `${done} / ${total}`;
-  document.getElementById('progress-fill').style.width = (done/total*100)+'%';
-}
-
-// ---- render sidebar tabs ----
-const tabsEl = document.getElementById('tabs');
-function renderSidebar(CATS) {
-  tabsEl.innerHTML = '';
-  let lastGroup = null;
-  CATS.forEach(cat=>{
-    const count = DATA.filter(it=>it.category===cat && it.topic===TOPIC).length;
-  const isBonus = cat.startsWith('Bonus');
-  if(isBonus && lastGroup !== 'bonus'){
-    const div = document.createElement('div');
-    div.className = 'tab-divider';
-    div.textContent = 'bonus decks';
-    tabsEl.appendChild(div);
-    lastGroup = 'bonus';
-  } else if(!isBonus && lastGroup === null){
-    const div = document.createElement('div');
-    div.className = 'tab-divider';
-    div.textContent = 'core 100';
-    tabsEl.appendChild(div);
-    lastGroup = 'core';
-  }
-  const btn = document.createElement('button');
-  btn.className = 'tab-btn';
-  btn.dataset.cat = cat;
-  btn.innerHTML = `<span>${cat.replace(/^\d+\.\s*/, m=>m)}</span><span class="n">${count}</span>`;
-  btn.addEventListener('click', ()=>{
-    document.getElementById(catId(cat)).scrollIntoView({behavior:'smooth', block:'start'});
-  });
-  tabsEl.appendChild(btn);
-  });
-}
-
-function catId(cat){
-  return 'cat-' + cat.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-}
-
-// ---- render main content ----
-const contentEl = document.getElementById('content');
-
-function buildCard(it){
-  const key = cardKey(it);
-  const isReviewed = reviewed.has(key);
-  const card = document.createElement('div');
-  card.className = `card ${it.source}${isReviewed ? ' reviewed' : ''}`;
-  card.dataset.key = key;
-  card.dataset.search = (it.question_hi + ' ' + it.answer_hi + ' ' + it.question_en + ' ' + it.answer_en).toLowerCase();
-
-  const head = document.createElement('div');
-  head.className = 'card-head';
-  head.innerHTML = `
-    <span class="card-num">${it.num ? '#'+it.num : '★'}</span>
-    <span class="card-q">${q(it)}</span>
-    <span class="card-meta">
-      <span class="badge ${it.source}">${it.source==='doc' ? 'your doc' : 'added'}</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-    </span>`;
-  head.addEventListener('click', ()=>{
-    card.classList.toggle('open');
-  });
-
-  const body = document.createElement('div');
-  body.className = 'card-body';
-  const inner = document.createElement('div');
-  inner.className = 'card-body-inner';
-  inner.innerHTML = renderAnswer(a(it));
-  const markBtn = document.createElement('button');
-  markBtn.className = 'mark-btn';
-  markBtn.textContent = isReviewed ? '✓ reviewed' : 'mark reviewed';
-  markBtn.addEventListener('click', (e)=>{
-    e.stopPropagation();
-    if(reviewed.has(key)){
-      reviewed.delete(key);
-      card.classList.remove('reviewed');
-      markBtn.textContent = 'mark reviewed';
-    } else {
-      reviewed.add(key);
-      card.classList.add('reviewed');
-      markBtn.textContent = '✓ reviewed';
-    }
-    saveProgress();
-  });
-  const speakBtn = document.createElement('button');
-  speakBtn.className = 'mark-btn';
-  speakBtn.innerHTML = '🔊 Listen';
-  speakBtn.style.marginRight = '10px';
-  speakBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      speakBtn.innerHTML = '🔊 Listen';
-    } else {
-      const rawText = a(it).replace(/<[^>]+>/g, '').replace(/[*_#`>\-]/g, '').trim();
-      const utterance = new SpeechSynthesisUtterance(rawText);
-      // Force language to Hindi/Indian English so browser defaults to it if voice search fails
-      utterance.lang = 'hi-IN';
-      
-      // Find an Indian female voice for better Hinglish pronunciation
-      const voices = window.speechSynthesis.getVoices();
-      let bestVoice = voices.find(v => 
-        (v.lang.includes('IN') || v.lang.includes('hi')) && 
-        (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('heera') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('aditi') || v.name.toLowerCase().includes('veena') || v.name.toLowerCase().includes('lekha'))
-      );
-      
-      // Fallback to any Indian voice
-      if (!bestVoice) {
-        bestVoice = voices.find(v => v.lang.includes('IN') || v.lang.includes('hi') || v.name.includes('India'));
-      }
-      // Fallback to any Female voice
-      if (!bestVoice) {
-        bestVoice = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira'));
-      }
-      
-      if (bestVoice) {
-          utterance.voice = bestVoice;
-      }
-      
-      utterance.onend = () => { speakBtn.innerHTML = '🔊 Listen'; };
-      speakBtn.innerHTML = '⏸ Stop';
-      window.speechSynthesis.speak(utterance);
-    }
-  });
-  inner.appendChild(speakBtn);
-  
-  inner.appendChild(markBtn);
-  body.appendChild(inner);
-
-  card.appendChild(head);
-  card.appendChild(body);
-  return card;
-}
-
-function renderContent(){
-  const CATS = [...new Set(DATA.filter(it => it.topic === TOPIC).map(it => it.category))];
-  renderSidebar(CATS);
-  contentEl.innerHTML = '';
-  CATS.forEach(cat=>{
-    const items = DATA.filter(it=>it.category===cat && it.topic === TOPIC);
-    const sectionHead = document.createElement('div');
-    sectionHead.className = 'section-head';
-    sectionHead.id = catId(cat);
-    sectionHead.innerHTML = `<h2>${cat}</h2><span class="count">${items.length} cards</span>`;
-    contentEl.appendChild(sectionHead);
-    items.forEach(it=> contentEl.appendChild(buildCard(it)));
-  });
-  updateProgressUI();
-  setupScrollSpy();
-}
-// renderContent() is called at the end of the script, after all helpers are defined
-const searchInput = document.getElementById('search');
-searchInput.addEventListener('input', ()=>{
-  const q = searchInput.value.trim().toLowerCase();
-  const cards = document.querySelectorAll('.card');
-  const heads = document.querySelectorAll('.section-head');
-  let anyVisible = false;
-  cards.forEach(c=>{
-    const match = !q || c.dataset.search.includes(q);
-    c.style.display = match ? '' : 'none';
-    if(match) anyVisible = true;
-    if(match && q) c.classList.add('open'); else if(!q) c.classList.remove('open');
-  });
-  heads.forEach(h=>{
-    const cat = h.id;
-    const anyIn = [...document.querySelectorAll(`.card`)].some(c=>{
-      return c.previousElementSibling; // no-op placeholder
-    });
-  });
-  // toggle section visibility based on whether it has visible cards after itself until next header
-  const allNodes = [...contentEl.children];
-  let currentHead = null, currentHasVisible = false;
-  allNodes.forEach(node=>{
-    if(node.classList.contains('section-head')){
-      if(currentHead) currentHead.style.display = currentHasVisible ? '' : 'none';
-      currentHead = node; currentHasVisible = false;
-    } else if(node.classList.contains('card')){
-      if(node.style.display !== 'none') currentHasVisible = true;
-    }
-  });
-  if(currentHead) currentHead.style.display = currentHasVisible ? '' : 'none';
-});
-
-// ---- active tab highlight on scroll ----
-const tabBtns = [...document.querySelectorAll('.tab-btn')];
-let currentObserver = null;
-function setupScrollSpy(){
-  if(currentObserver) currentObserver.disconnect();
-  const currentCats = [...new Set(DATA.filter(it => it.topic === TOPIC).map(it => it.category))];
-  const headEls = currentCats.map(cat=>document.getElementById(catId(cat)));
-  currentObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        const idx = headEls.indexOf(entry.target);
-        tabBtns.forEach(b=>b.classList.remove('active'));
-        if(tabBtns[idx]) tabBtns[idx].classList.add('active');
-      }
-    });
-  }, { rootMargin: '-10% 0px -75% 0px' });
-  headEls.forEach(el=> el && currentObserver.observe(el));
-}
-
-// ---- language & topic toggle ----
-let TOPIC = 'react';
-document.getElementById('lang-select').addEventListener('change', (e) => {
-  LANG = e.target.value;
-  renderContent();
-  if(searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
-});
-
-document.getElementById('topic-select').addEventListener('change', (e) => {
-  TOPIC = e.target.value;
-  renderContent();
-  if(searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
-});
-
-// ---- initial render (after all helpers above are defined) ----
-renderContent();
-
-</script>
+<script src="script.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,190 @@
+# Code Snippet Syntax Highlighting — Implementation Plan
+
+> **Goal:** Answers mein jo code blocks hain (` ```python ... ``` `), unhe colorful syntax highlighted code mein dikhana — bina kisi image ke. GitHub Pages par live chalega.
+
+---
+
+## 📁 Kaunsi file mein kaam hoga?
+
+| File | Kya karna hai |
+|---|---|
+| `index.html` | **SIRF YAHI FILE EDIT HOGI** — CDN links add karo + rendering logic update karo |
+| `reactQuestions.js` | ❌ KUCH MAT KARO |
+| `pythonQuestions.js` | ❌ KUCH MAT KARO |
+
+---
+
+## 🔧 Step-by-Step Implementation
+
+### Step 1 — Prism.js CDN Links Add Karo
+
+> [!IMPORTANT]
+> `index.html` ke `<head>` section mein **2 lines** add karni hain — ek CSS, ek JS.
+
+#### [MODIFY] [index.html](file:///c:/Users/vikra/OneDrive/Desktop/react%20100%20Q%20interview/index.html)
+
+`<head>` ke andar, existing `<style>` tag se **PEHLE**, ye 2 lines add karo:
+
+```html
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+```
+
+**Kya hai ye?**
+- `prism-tomorrow.min.css` → Dark theme CSS (code ko colorful banayega)
+- `prism.min.js` → Main library
+- `prism-python.min.js` → Python code highlight karega
+- `prism-jsx.min.js` → React JSX code highlight karega
+- `prism-javascript.min.js` → JS code highlight karega
+- `prism-bash.min.js` → Terminal/bash commands highlight karega
+
+---
+
+### Step 2 — Rendering Function Mein Markdown Code Blocks Ko HTML Mein Convert Karo
+
+> [!IMPORTANT]
+> `index.html` ke andar jahan answer render hota hai (innerHTML set hota hai), wahan ek helper function add karna hai jo ` ```python ... ``` ` ko `<pre><code class="language-python">...</code></pre>` mein convert kare.
+
+**Naya function add karo** (JS section mein, render function se PEHLE):
+
+```javascript
+function formatAnswer(text) {
+    // Step A: Code blocks convert karo (```language ... ```)
+    text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, function(match, lang, code) {
+        lang = lang || 'text';
+        // HTML special characters escape karo
+        code = code.trim()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        return '<pre><code class="language-' + lang + '">' + code + '</code></pre>';
+    });
+    
+    // Step B: Inline code convert karo (`code`)
+    text = text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+    
+    // Step C: Bold text convert karo (**text**)
+    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    
+    // Step D: Blockquote convert karo (> text)
+    text = text.replace(/^>\s*(.+)$/gm, '<blockquote>$1</blockquote>');
+    
+    // Step E: Newlines ko <br> mein convert karo (but pre ke andar nahi)
+    // Pehle pre blocks protect karo, phir newlines replace karo
+    
+    return text;
+}
+```
+
+---
+
+### Step 3 — Render Function Mein `formatAnswer()` Call Karo
+
+> [!IMPORTANT]
+> Jahan bhi answer ka text innerHTML mein jaata hai, wahan `formatAnswer()` function call karo.
+
+**Pehle (OLD):**
+```javascript
+answerDiv.innerHTML = item.answer_hi;
+```
+
+**Baad mein (NEW):**
+```javascript
+answerDiv.innerHTML = formatAnswer(item.answer_hi);
+```
+
+Yahi change `answer_en` ke liye bhi karna hai (jab English language selected ho).
+
+---
+
+### Step 4 — Prism.highlightAll() Call Karo
+
+> [!IMPORTANT]
+> Jab bhi cards render hon, uske BAAD `Prism.highlightAll()` call karo taaki library code blocks ko colorful bana sake.
+
+Render function ke **end mein** ye ek line add karo:
+
+```javascript
+if (typeof Prism !== 'undefined') {
+    Prism.highlightAll();
+}
+```
+
+---
+
+### Step 5 — CSS Styling Add Karo (Optional but Important)
+
+`<style>` section mein ye CSS add karo taaki code blocks ache dikhein:
+
+```css
+/* Code block styling */
+pre[class*="language-"] {
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 13px;
+    overflow-x: auto;
+}
+
+code.inline-code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+}
+```
+
+---
+
+## ❌ Kya NAHI Karna Hai
+
+| Rule | Reason |
+|---|---|
+| `reactQuestions.js` ko TOUCH MAT KARO | Data files mein koi change nahi chahiye |
+| `pythonQuestions.js` ko TOUCH MAT KARO | Data files mein koi change nahi chahiye |
+| Images DOWNLOAD MAT KARO | Code text se render hoga, images nahi chahiye |
+| Git commands MAT CHALAAO | User bolega tab chalana |
+| Naye files CREATE MAT KARO | Sab kuch `index.html` mein hoga |
+
+---
+
+## ✅ Verification Plan
+
+### Manual Verification
+1. Browser mein `index.html` open karo
+2. Python questions check karo — jaise "List comprehension kya hai?" — answer mein code block colorful dikhna chahiye
+3. React questions check karo — JSX code blocks colorful dikhne chahiye
+4. Language dropdown change karo (Hindi ↔ English) — code blocks dono languages mein kaam kare
+5. Topic dropdown change karo — sab theek rahe
+
+---
+
+## 📝 Summary — Total Changes
+
+| Change | Location | Lines |
+|---|---|---|
+| 6 CDN links add | `<head>` section | ~6 lines |
+| `formatAnswer()` function | JS section | ~20 lines |
+| Render mein `formatAnswer()` call | Render function | ~2 lines changed |
+| `Prism.highlightAll()` call | Render function end | 3 lines |
+| CSS styling | `<style>` section | ~12 lines |
+| **TOTAL** | **Sirf `index.html`** | **~43 lines** |
+
+
+
+
+
+Aage se answers likhte time bas in 4 rules ka dhyan rakhna:
+
+1. Multi-line Code Block ke liye (Bada code): Apne code ko start karne se pehle 3 backticks ( ` ) aur language ka naam likho (jaise python yajavascript), phir apna code likho, aur end mein wapas 3 backticks laga do. Yahi trick hai jisse system usko colourful box mein daal dega.
+
+2. Inline Code ke liye (Chota text ya function ka naam): Agar tumhe kisi line ke beech mein bas ek chota sa function ya variable highlight karna hai, toh us word ke aage aur peeche sirf ek single backtick ( ) laga do (jaiseprint()` likhna). Wo automatically ek grey background wale chote tag mein aa jayega.
+
+3. Highlighted Quote (Blockquote) ke liye: Agar koi definition ya summary alag se highlight karke dikhani hai, toh us line ke shuru mein > (greater-than sign) aur ek space de do. Wo automatically ek sundar italic text ban jayega jiske left mein ek amber color ki line hogi.
+
+4. Bold Text ke liye: Kissi bhi word ya line ko bold karne ke liye uske aage aur peeche do taare ( ** ) laga do. Jaise yeh bold hai.
