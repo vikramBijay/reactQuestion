@@ -361,20 +361,65 @@ a { color: inherit; text-decoration: none; }
 
 footer { margin: 60px 60px 40px; padding-top: 24px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 13px; }
 
-/* Responsive adjustments */
+/* ====== MOBILE RESPONSIVE — APP VIEW ====== */
 @media (max-width: 860px) {
+  /* Shell: single column stack */
   .shell { grid-template-columns: 1fr; padding: 0; gap: 0; }
-  .rail { 
-    position: relative; height: auto; border: none; border-bottom: 1px solid var(--rule); 
-    border-radius: 0; padding: 20px;
+
+  /* Sidebar: collapse to a compact top bar */
+  .rail {
+    position: relative; height: auto; border: none;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0; padding: 16px 20px;
   }
-  .main { height: auto; border-radius: 0; border: none; overflow-y: visible; }
-  .hero { margin: 30px 20px; }
-  .section-head { margin: 30px 20px 20px; }
-  .card { margin: 0 20px 16px; }
-  .card-body-inner { padding: 0 20px 20px 20px; }
-  .mac-titlebar { display: none; } /* Hide mac titlebar on mobile */
-  footer { margin: 40px 20px; }
+  .rail-title { display: none; }
+  #tabs { display: none; } /* hide sidebar tabs on mobile — use search instead */
+  .progress-block { margin-top: 12px; }
+
+  /* Main area: no border, full width, natural scroll */
+  .main { height: auto; border-radius: 0; border: none; overflow-y: visible; overflow-x: hidden; }
+
+  /* Hero: tighter spacing, no text overflow */
+  .hero { margin: 24px 16px; }
+  .hero h1 { font-size: 22px; line-height: 1.35; word-break: break-word; }
+  .hero p { font-size: 14px; overflow-wrap: break-word; }
+  .legend { flex-wrap: wrap; gap: 8px; font-size: 12px; }
+
+  /* Section headers */
+  .section-head { margin: 24px 16px 12px; }
+  .section-head h2 { font-size: 16px; }
+
+  /* Cards: proper mobile padding, no overflow */
+  .card { margin: 0 12px 14px; border-radius: 10px; }
+  .card-head { padding: 16px 16px; }
+  .card-q { font-size: 16px; line-height: 1.45; }
+  .card-num { font-size: 13px; min-width: 28px; }
+  .card-meta { gap: 8px; }
+  .badge { font-size: 9px; padding: 3px 7px; }
+  .chev { width: 16px; height: 16px; }
+
+  /* Answer body */
+  .card-body-inner {
+    padding: 16px 16px 20px 16px;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .card-body-inner p { margin: 0 0 12px; }
+  .card-body-inner ul { padding-left: 18px; }
+  .card-body-inner code { font-size: 13px; }
+
+  /* Code blocks: scroll horizontally, don't overflow card */
+  pre[class*="language-"] { font-size: 13px !important; padding: 12px !important; margin: 10px 0 !important; }
+
+  /* Mark / listen buttons */
+  .mark-btn { font-size: 12px; padding: 7px 14px; }
+
+  /* Mac titlebar: hide on mobile — no space for it */
+  .mac-titlebar { display: none; }
+
+  footer { margin: 40px 16px; font-size: 12px; }
 }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -668,6 +713,15 @@ blockquote { border-left: 4px solid var(--accent); margin: 16px 0; padding-left:
   position: relative;
   width: 100%;
 }
+.page-home .container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.text-center {
+  text-align: center;
+}
 .page-title.home {
   margin-bottom: 75px;
 }
@@ -826,26 +880,46 @@ blockquote { border-left: 4px solid var(--accent); margin: 16px 0; padding-left:
   100% { filter: blur(0px); opacity: 1; }
 }
 
+/* ====== MOBILE — HONEYCOMB HOME VIEW ====== */
 @media only screen and (max-width: 767px) {
-  .page-title.home {
-    margin-bottom: 40px;
+  /* Home page: full screen, scroll if needed */
+  #home-view {
+    align-items: flex-start;
+    padding: 60px 0 80px;
+    overflow-x: hidden;
   }
+
+  /* Title: smaller, tighter, centered */
+  .heading-page { font-size: 32px; letter-spacing: 2px; text-align: center; display: block; }
+  .page-title.home { margin-bottom: 40px; text-align: center; }
+  .page-title p { font-size: 15px; padding: 0 16px; margin: 12px auto 0; text-align: center; max-width: 320px; line-height: 1.5; }
+
+  /* 
+   * KEY FIX: Scale the whole honeycomb grid down to fit the screen.
+   * The float-based honeycomb is ~760px wide at desktop.
+   * At 375px screen, 0.46 scale fits perfectly.
+   * transform-origin: top center ensures it scales from the middle-top.
+   * margin-bottom compensates for the visual height lost by scaling.
+   */
   .hexagon-menu.clear {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 60px;
+    transform: scale(0.46);
+    transform-origin: top center;
+    /* Height compensation: original ~340px * (1 - 0.46) = -184px */
+    margin-bottom: -185px;
+    /* Do NOT change float/margin-left — keeps proper honeycomb arrangement */
   }
+
+  /* Reset any previous bad overrides */
   .hexagon-item {
-    float: none;
-    margin: 0 0 -20px 0 !important;
+    float: left !important;
+    margin-left: -29px !important;
   }
-  .hexagon-item:last-child {
-    margin-bottom: 0 !important;
+  .hexagon-item:first-child {
+    margin-left: 0 !important;
   }
-  .page-home .hexagon-item:nth-last-child(1), 
-  .page-home .hexagon-item:nth-last-child(2), 
+  .page-home .hexagon-item:nth-last-child(1),
+  .page-home .hexagon-item:nth-last-child(2),
   .page-home .hexagon-item:nth-last-child(3) {
-    transform: rotate(30deg) !important;
+    transform: rotate(30deg) translate(87px, -80px) !important;
   }
 }
