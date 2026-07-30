@@ -160,13 +160,13 @@ function attachTryEditors(container, rawCodes) {
 
 const STORAGE_KEY = 'react-revision-progress-v1';
 let reviewed = new Set();
-try{
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(raw) reviewed = new Set(JSON.parse(raw));
-}catch(e){}
+// try{
+//   const raw = localStorage.getItem(STORAGE_KEY);
+//   if(raw) reviewed = new Set(JSON.parse(raw));
+// }catch(e){}
 
 function saveProgress(){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify([...reviewed])); }catch(e){}
+  // try{ localStorage.setItem(STORAGE_KEY, JSON.stringify([...reviewed])); }catch(e){}
   updateProgressUI();
 }
 
@@ -318,20 +318,24 @@ function renderContent(){
   const CATS = [...new Set(DATA.filter(it => it.topic === TOPIC).map(it => it.category))];
   renderSidebar(CATS);
   contentEl.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+  
   CATS.forEach(cat=>{
     const items = DATA.filter(it=>it.category===cat && it.topic === TOPIC);
     const sectionHead = document.createElement('div');
     sectionHead.className = 'section-head';
     sectionHead.id = catId(cat);
     sectionHead.innerHTML = `<h2>${cat}</h2><span class="count">${items.length} cards</span>`;
-    contentEl.appendChild(sectionHead);
-    items.forEach(it=> contentEl.appendChild(buildCard(it)));
+    fragment.appendChild(sectionHead);
+    
+    items.forEach(it=> fragment.appendChild(buildCard(it)));
   });
+  contentEl.appendChild(fragment);
   updateProgressUI();
   setupScrollSpy();
   
   if (typeof Prism !== 'undefined') {
-      Prism.highlightAll();
+      setTimeout(() => Prism.highlightAll(), 50);
   }
 }
 // renderContent() is called at the end of the script, after all helpers are defined

@@ -213,9 +213,20 @@ const REACT_DATA = [
     "num": "22",
     "category": "2. Components & Props (16–25)",
     "question_hi": "Prop Drilling kya hai?",
-    "answer_hi": "Prop drilling ek aisi situation hai jahan data ko multiple nested components ke through pass karna padta hai sirf isliye ki wo kisi deep child component tak pahunche, chahe beech ke components ko us data ki zarurat na ho. Doc ke according, lifting state up aur Context API se prop drilling avoid kiya ja sakta hai: \"By lifting state up, you can avoid prop drilling and make state management simple and clean.\"\n\n```jsx\n// Prop drilling (bad) — data har level se guzarti hai\n<A user={user}>\n  <B user={user}>\n    <C user={user} />\n  </B>\n</A>\n\n// Context API se avoid karte hain\nconst UserContext = React.createContext();\n<UserContext.Provider value={user}>\n  <A />\n</UserContext.Provider>\n// C ke andar: const user = useContext(UserContext);\n```",
+    "answer_hi": "Prop drilling is a situation where data (props) has to be passed from parent component to deep child component, through multiple nested components in between, and these multiple middle componets has to access the data even if they don't need that data. \"\n\n```jsx\n// Prop drilling (bad) — data har level se guzarti hai\n<A user={user}>\n  <B user={user}>\n    <C user={user} />\n  </B>\n</A>\n\n// Context API se avoid karte hain\nconst UserContext = React.createContext();\n<UserContext.Provider value={user}>\n  <A />\n</UserContext.Provider>\n// C ke andar: const user = useContext(UserContext);\n```",
     "question_en": "What is prop drilling?",
-    "answer_en": "Prop drilling is a situation where data has to be passed through multiple nested components just so it reaches some deep child component, even though the components in between don't need that data. According to the doc, lifting state up and the Context API can help avoid prop drilling: \"By lifting state up, you can avoid prop drilling and make state management simple and clean.\"\n\n```jsx\n// Prop drilling (bad) — data har level se guzarti hai\n<A user={user}>\n  <B user={user}>\n    <C user={user} />\n  </B>\n</A>\n\n// Context API se avoid karte hain\nconst UserContext = React.createContext();\n<UserContext.Provider value={user}>\n  <A />\n</UserContext.Provider>\n// C ke andar: const user = useContext(UserContext);\n```",
+    "answer_en": "Prop drilling is a situation where data (props) has to be passed from parent component to deep child component, through multiple nested components in between, and these multiple middle componets has to access the data even if they don't need that data. \"\n\n```jsx\n// Prop drilling (bad) — data har level se guzarti hai\n<A user={user}>\n  <B user={user}>\n    <C user={user} />\n  </B>\n</A>\n\n// Context API se avoid karte hain\nconst UserContext = React.createContext();\n<UserContext.Provider value={user}>\n  <A />\n</UserContext.Provider>\n// C ke andar: const user = useContext(UserContext);\n```",
+    "source": "doc",
+    "topic": "react"
+  },
+  {
+    "num": "22.1",
+    "category": "2. Components & Props (16–25)",
+    "question_hi": "How would you lift the state up in a React application, and why is it necessary?",
+    "answer_hi": "• Lifting state up means moving the state from child components to their nearest common ancestor.-   •	This is used when multiple components need to share the same state, even if they don’t have a direct parent-child relationship. By lifting state up, you can avoid prop drilling and make state management simple and clean.",
+    "question_en": "How would you lift the state up in a React application, and why is it necessary?",
+    "answer_en": "• Lifting state up means moving the state from child components to their nearest common ancestor.-   •	This is used when multiple components need to share the same state, even if they don’t have a direct parent-child relationship. By lifting state up, you can avoid prop drilling and make state management simple and clean.",
+   
     "source": "doc",
     "topic": "react"
   },
@@ -313,9 +324,9 @@ const REACT_DATA = [
     "num": "32",
     "category": "3. Rendering (26–35)",
     "question_hi": "React.memo",
-    "answer_hi": "Doc mein Pure Components ke context mein mention hai: functional components React.memo use karke pure component jaisa behavior achieve kar sakte hain — yani props/state change hone par hi re-render honge, shallow comparison ke through.\n\n```jsx\nconst Child = React.memo(function Child({ value }) {\n  console.log('Child rendered');\n  return <p>{value}</p>;\n});\n```",
+    "answer_hi": "it is used to opimize peformance by memoizing expensive calculation so that they dont run on evey render. \n\n```jsx\nconst Child = React.memo(function Child({ value }) {\n  console.log('Child rendered');\n  return <p>{value}</p>;\n});\n```",
     "question_en": "React.memo",
-    "answer_en": "Your doc mentions this in the context of Pure Components: functional components can use React.memo to get pure-component-like behavior — meaning they only re-render when props/state change, using shallow comparison.\n\n```jsx\nconst Child = React.memo(function Child({ value }) {\n  console.log('Child rendered');\n  return <p>{value}</p>;\n});\n```",
+    "answer_en": "it is used to opimize peformance by memoizing expensive calculation so that they dont run on evey render. \n\n```jsx\nconst Child = React.memo(function Child({ value }) {\n  console.log('Child rendered');\n  return <p>{value}</p>;\n});\n```",
     "source": "doc",
     "topic": "react"
   },
@@ -1139,37 +1150,7 @@ const REACT_DATA = [
     "source": "written",
     "topic": "react"
   },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Difference between Props & State",
-    "answer_hi": "Props → external, read-only data (parent se aati hai). State → internal, mutable data (component khud manage karta hai).",
-    "question_en": "Difference between Props & State",
-    "answer_en": "Props → external, read-only data (comes from the parent). State → internal, mutable data (the component manages it itself).",
-    "source": "written",
-    "topic": "react"
-  },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Difference between let, var, const",
-    "answer_hi": "- `var`: function-scoped, re-declare/update dono allowed, hoisting hoti hai (undefined ke saath).\n- `let`: block-scoped, update allowed but re-declare nahi, hoisting hoti hai but \"temporal dead zone\" ki wajah se access nahi hota init se pehle.\n- `const`: block-scoped, na update na re-declare (value reassign nahi kar sakte, lekin object/array ke andar ke properties change kar sakte hain).\n\n```jsx\nvar a = 1;   // function-scoped\nlet b = 2;   // block-scoped, updatable\nconst c = 3; // block-scoped, not reassignable\n```",
-    "question_en": "Difference between let, var, const",
-    "answer_en": "- var: function-scoped, both redeclaring and updating are allowed, gets hoisted (initialized with undefined).\n- let: block-scoped, updating is allowed but not redeclaring; it's hoisted too, but the \"temporal dead zone\" means it can't be accessed before its initialization.\n- const: block-scoped, neither updating nor redeclaring is allowed (you can't reassign the value, though you can change properties inside an object/array).\n\n```jsx\nvar a = 1;   // function-scoped\nlet b = 2;   // block-scoped, updatable\nconst c = 3; // block-scoped, not reassignable\n```",
-    "source": "written",
-    "topic": "react"
-  },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Difference between == and ===",
-    "answer_hi": "`==` (loose equality) comparison se pehle type conversion karta hai (`\"5\" == 5` → true). `===` (strict equality) type conversion nahi karta, value aur type dono match hone chahiye (`\"5\" === 5` → false).\n\n```jsx\n\"5\" == 5;   // true  (type conversion hoti hai)\n\"5\" === 5;  // false (type conversion nahi hoti)\n```",
-    "question_en": "Difference between == and ===",
-    "answer_en": "`==` (loose equality) converts types before comparing (`\"5\" == 5` → true). `===` (strict equality) doesn't convert types — both value and type must match (`\"5\" === 5` → false).\n\n```jsx\n\"5\" == 5;   // true  (type conversion hoti hai)\n\"5\" === 5;  // false (type conversion nahi hoti)\n```",
-    "source": "written",
-    "topic": "react"
-  },
-  {
+ {
     "num": null,
     "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
     "question_hi": "Event Bubbling & Capturing",
@@ -1179,26 +1160,7 @@ const REACT_DATA = [
     "source": "written",
     "topic": "react"
   },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Closures",
-    "answer_hi": "Closure ek function hota hai jo apne outer (lexical) scope ke variables ko yaad rakhta hai, chahe outer function execute ho chuka ho. Isse data privacy (jaise counters) aur state persist karne jaisi cheezein possible hoti hain.\n\n```jsx\nfunction makeCounter() {\n  let count = 0;\n  return () => ++count; // ye function 'count' ko yaad rakhta hai\n}\n\nconst counter = makeCounter();\ncounter(); // 1\ncounter(); // 2\n```",
-    "question_en": "Closures",
-    "answer_en": "A closure is a function that remembers the variables from its outer (lexical) scope, even after the outer function has finished executing. This makes things like data privacy (e.g. counters) and persisting state possible.\n\n```jsx\nfunction makeCounter() {\n  let count = 0;\n  return () => ++count; // ye function 'count' ko yaad rakhta hai\n}\n\nconst counter = makeCounter();\ncounter(); // 1\ncounter(); // 2\n```",
-    "source": "written",
-    "topic": "react"
-  },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Hoisting",
-    "answer_hi": "Hoisting JavaScript ka wo behavior hai jisme variable aur function declarations ko unke scope ke top par \"move\" kar diya jaata hai (execution se pehle), memory allocation ke waqt. `var` aur function declarations hoist hoti hain (usable value ke saath/undefined), lekin `let`/`const` technically hoist hoti hain but temporal dead zone ki wajah se use se pehle access nahi ki ja sakti.\n\n```jsx\nconsole.log(x); // undefined (hoisted)\nvar x = 5;\n\nconsole.log(y); // ReferenceError (temporal dead zone)\nlet y = 5;\n```",
-    "question_en": "Hoisting",
-    "answer_en": "Hoisting is JavaScript's behavior of moving variable and function declarations to the top of their scope (before execution), during the memory allocation phase. var and function declarations are hoisted (usable/with undefined), but let/const are technically hoisted too — though the temporal dead zone means they can't be accessed before being initialized.\n\n```jsx\nconsole.log(x); // undefined (hoisted)\nvar x = 5;\n\nconsole.log(y); // ReferenceError (temporal dead zone)\nlet y = 5;\n```",
-    "source": "written",
-    "topic": "react"
-  },
+  
   {
     "num": null,
     "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
@@ -1219,36 +1181,7 @@ const REACT_DATA = [
     "source": "written",
     "topic": "react"
   },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Promise",
-    "answer_hi": "Promise ek JavaScript object hai jo kisi async operation ke eventual success (`resolve`) ya failure (`reject`) ko represent karta hai. Iske 3 states hote hain: `pending`, `fulfilled`, `rejected`. `.then()`, `.catch()`, `.finally()` se handle kiya jaata hai.\n\n```jsx\nconst promise = new Promise((resolve, reject) => {\n  setTimeout(() => resolve('done'), 1000);\n});\n\npromise.then((result) => console.log(result));\n```",
-    "question_en": "Promise",
-    "answer_en": "A Promise is a JavaScript object that represents the eventual success (resolve) or failure (reject) of an async operation. It has 3 states: pending, fulfilled, rejected. Handled with .then(), .catch(), .finally().\n\n```jsx\nconst promise = new Promise((resolve, reject) => {\n  setTimeout(() => resolve('done'), 1000);\n});\n\npromise.then((result) => console.log(result));\n```",
-    "source": "written",
-    "topic": "react"
-  },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Async Await",
-    "answer_hi": "`async/await` Promises ko handle karne ka ek cleaner, synchronous-jaisa syntax hai. `async` function hamesha ek Promise return karta hai; `await` keyword uske andar kisi Promise ke resolve hone tak wait karta hai bina blocking kiye poore thread ko. Errors ko `try...catch` se handle kiya jaata hai.\n\n```jsx\nasync function getUser() {\n  try {\n    const res = await fetch('/api/user');\n    const data = await res.json();\n    return data;\n  } catch (err) {\n    console.error(err);\n  }\n}\n```",
-    "question_en": "Async Await",
-    "answer_en": "async/await is a cleaner, synchronous-looking syntax for handling Promises. An async function always returns a Promise; the await keyword inside it waits for a Promise to resolve, without blocking the whole thread. Errors are handled with try...catch.\n\n```jsx\nasync function getUser() {\n  try {\n    const res = await fetch('/api/user');\n    const data = await res.json();\n    return data;\n  } catch (err) {\n    console.error(err);\n  }\n}\n```",
-    "source": "written",
-    "topic": "react"
-  },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Event Loop",
-    "answer_hi": "Event loop JavaScript ka wo mechanism hai jo single-threaded hone ke bawajood asynchronous operations handle karne deta hai. Ye continuously check karta hai ki call stack khali hai ya nahi — agar khali hai, to callback queue (ya microtask queue, jo Promises ke liye priority mein hoti hai) se agla task uthakar call stack mein daal deta hai.",
-    "question_en": "Event Loop",
-    "answer_en": "The event loop is the mechanism that lets JavaScript, despite being single-threaded, handle asynchronous operations. It continuously checks whether the call stack is empty — if it is, it picks up the next task from the callback queue (or the microtask queue, which has priority for Promises) and pushes it onto the call stack.",
-    "source": "written",
-    "topic": "react"
-  },
+  
   {
     "num": null,
     "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
@@ -1279,26 +1212,8 @@ const REACT_DATA = [
     "source": "written",
     "topic": "react"
   },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "LocalStorage vs SessionStorage",
-    "answer_hi": "- **LocalStorage**: data browser mein permanently store hota hai (tab/browser band karne ke baad bhi rehta hai), jab tak manually clear na kiya jaaye.\n- **SessionStorage**: data sirf current tab/session ke liye store hota hai — tab band karte hi delete ho jaata hai.\nDono ki storage limit ~5-10MB hoti hai aur data sirf strings ke roop mein store hota hai.\n\n```jsx\nlocalStorage.setItem('theme', 'dark');\nlocalStorage.getItem('theme'); // 'dark' (browser band karne ke baad bhi)\n\nsessionStorage.setItem('temp', 'value');\nsessionStorage.getItem('temp'); // tab band hote hi delete\n```",
-    "question_en": "LocalStorage vs SessionStorage",
-    "answer_en": "- LocalStorage: data is stored permanently in the browser (persists even after closing the tab/browser), until manually cleared.\n- SessionStorage: data is stored only for the current tab/session — it's deleted as soon as the tab is closed.\nBoth have a storage limit of ~5-10MB, and data is stored only as strings.\n\n```jsx\nlocalStorage.setItem('theme', 'dark');\nlocalStorage.getItem('theme'); // 'dark' (browser band karne ke baad bhi)\n\nsessionStorage.setItem('temp', 'value');\nsessionStorage.getItem('temp'); // tab band hote hi delete\n```",
-    "source": "written",
-    "topic": "react"
-  },
-  {
-    "num": null,
-    "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
-    "question_hi": "Cookies",
-    "answer_hi": "Cookies chhoti text files hoti hain jo browser mein store hoti hain aur har HTTP request ke saath server ko automatically bheji jaati hain. Inka use sessions, authentication tokens, aur user preferences store karne ke liye hota hai. Expiry date set ki ja sakti hai, aur `HttpOnly`/`Secure` flags se inhe safer banaya ja sakta hai.\n\n```jsx\ndocument.cookie = \"token=abc123; expires=Fri, 31 Dec 2026 23:59:59 GMT; HttpOnly; Secure\";\n```",
-    "question_en": "Cookies",
-    "answer_en": "Cookies are small text files stored in the browser and automatically sent to the server with every HTTP request. They're used to store sessions, authentication tokens, and user preferences. An expiry date can be set, and HttpOnly/Secure flags can make them safer.\n\n```jsx\ndocument.cookie = \"token=abc123; expires=Fri, 31 Dec 2026 23:59:59 GMT; HttpOnly; Secure\";\n```",
-    "source": "written",
-    "topic": "react"
-  },
+ 
+
   {
     "num": null,
     "category": "Bonus: JS & Tooling (2026 Frequently Asked)",

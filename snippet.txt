@@ -176,7 +176,7 @@ code.inline-code {
 | **TOTAL** | **Sirf `index.html`** | **~43 lines** |
 
 
-
+---------------------------------------------------------------------------------------------------------------
 
 
 Aage se answers likhte time bas in 4 rules ka dhyan rakhna:
@@ -188,3 +188,64 @@ Aage se answers likhte time bas in 4 rules ka dhyan rakhna:
 3. Highlighted Quote (Blockquote) ke liye: Agar koi definition ya summary alag se highlight karke dikhani hai, toh us line ke shuru mein > (greater-than sign) aur ek space de do. Wo automatically ek sundar italic text ban jayega jiske left mein ek amber color ki line hogi.
 
 4. Bold Text ke liye: Kissi bhi word ya line ko bold karne ke liye uske aage aur peeche do taare ( ** ) laga do. Jaise yeh bold hai.
+
+---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+## 📋 New Topic File Add Karne Ka Plan
+
+### Step 1 — Data File banao / format karo
+Naye `.js` file ki **pehli line** mein variable declare karo:
+```
+const CSS_DATA = [ ... ]
+```
+Aur **last line** pe semicolon lagao:
+```
+];
+```
+Har object mein `"topic": "css"` field hona chahiye (jo tumhare topic name se match kare).
+
+---
+
+### Step 2 — `index.html` mein 3 jagah change karo
+
+**2a. Script tag add karo** (baaki script tags ke paas):
+```
+<script src="cssQuestions.js"></script>
+```
+
+**2b. DATA array mein spread karo** (same line pe):
+```
+const DATA = [...REACT_DATA, ...PYTHON_DATA, ...JAVASCRIPT_DATA, ...CSS_DATA];
+```
+
+**2c. Sidebar Dropdown mein option add karo:**
+```
+<div class="mac-dropdown-item" data-value="css">CSS</div>
+```
+
+**2d. Hexagon Home Page mein `data-topic` match karo:**
+Hexagon pe `data-topic="css"` — ye value exactly wahi honi chahiye jo data file mein `"topic": "css"` likha ho.
+
+---
+
+### ⚠️ Ek Important Rule
+
+`data-topic` (hexagon HTML) = `data-value` (dropdown HTML) = `topic` field (JS data file) — **teeno ekdum same spelling** hone chahiye, warna filter kaam nahi karega. Ye hi bug tha JS wali file mein (`"js"` vs `"javascript"`).
+
+---
+
+**Summary table:**
+
+| File | Kya change karo |
+|---|---|
+| `newFile.js` | `const NEW_DATA = [...]` wrap karo + topic field sahi rakho |
+| `index.html` | `<script src>` tag add karo |
+| `index.html` | `DATA = [... , ...NEW_DATA]` mein add karo |
+| `index.html` | Dropdown mein `<div data-value="topic">` add karo |
+| `index.html` | Hexagon ka `data-topic="topic"` match karo |
+

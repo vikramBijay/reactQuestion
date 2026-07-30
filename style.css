@@ -284,28 +284,44 @@ a { color: inherit; text-decoration: none; }
 
 .card {
   margin: 0 60px 24px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--card-line);
-  border-radius: 12px;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   position: relative;
   transition: all 0.2s var(--ease-out);
 }
 .card::before {
-  content: ''; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 4px;
-  background: transparent; border-radius: 12px 0 0 12px;
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: transparent;
+  border-radius: 16px 0 0 16px;
   transition: background 0.3s var(--ease-out);
+  z-index: 2;
 }
 .card.doc::before { background: var(--green); }
 .card.written::before { background: var(--accent); }
 .card.reviewed::before { background: var(--paper-dim); }
 .card:hover { 
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255,255,255,0.15);
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.08), rgba(0,0,0,0.15));
+  border-color: rgba(255,255,255,0.2);
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top right, rgba(10, 132, 255, 0.05), transparent, rgba(48, 209, 88, 0.05));
+  opacity: 0.5;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .card-head {
   display: flex; align-items: flex-start; gap: 16px;
   padding: 20px 24px; cursor: pointer; user-select: none;
+  position: relative; z-index: 1;
 }
 .card-num { font-size: 14px; font-weight: 600; color: var(--muted); flex-shrink: 0; min-width: 32px; }
 /* BUMPED TEXT SIZE for question to 19px */
@@ -323,6 +339,7 @@ a { color: inherit; text-decoration: none; }
   max-height: 0;
   overflow-y: hidden;
   transition: max-height 0.4s var(--spring);
+  position: relative; z-index: 1;
 }
 .card.open .card-body { 
   max-height: 80vh; /* Changed from 2000px to 80vh so it can scroll if too large */
@@ -708,10 +725,18 @@ blockquote { border-left: 4px solid var(--accent); margin: 16px 0; padding-left:
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at center, #1E1E1E 0%, #000000 100%);
+  position: relative;
+  overflow: hidden;
 }
+
+#home-view .overlay {
+  display: none;
+}
+
 .page-home {
   position: relative;
   width: 100%;
+  z-index: 1; /* ensures content sits above the overlay */
 }
 .page-home .container {
   width: 100%;
