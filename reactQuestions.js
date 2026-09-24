@@ -1186,10 +1186,9 @@ const REACT_DATA = [
     "num": null,
     "category": "Bonus: JS & Tooling (2026 Frequently Asked)",
     "question_hi": "REST API",
-    "answer_hi": "REST (Representational State Transfer) ek architectural style hai APIs design karne ke liye, jisme resources ko URLs (endpoints) ke through access kiya jaata hai, aur standard HTTP methods use hote hain: `GET` (read), `POST` (create), `PUT`/`PATCH` (update), `DELETE` (remove).",
+    "answer_hi": "REST (Representational State Transfer) is a way of designing APIs where resources are accessed through URLs (endpoints) using standard HTTP methods such as GET, POST, PUT/PATCH, and DELETE.",
     "question_en": "REST API",
-    "answer_en": "REST (Representational State Transfer) is an architectural style for designing APIs, where resources are accessed through URLs (endpoints), using standard HTTP methods: GET (read), POST (create), PUT/PATCH (update), DELETE (remove).",
-    "source": "written",
+    "answer_en": "REST (Representational State Transfer) is a way of designing APIs where resources are accessed through URLs (endpoints) using standard HTTP methods such as GET, POST, PUT/PATCH, and DELETE.",
     "topic": "react"
   },
   {
