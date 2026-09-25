@@ -1233,12 +1233,12 @@ function getDataPromisified() {
 // 33. Promise.all 🔥
 // ==========================================
 
-const p1 = Promise.resolve("P1");
-const p2 = Promise.resolve("P2");
-const p3 = Promise.resolve("P3");
+const pr1 = Promise.resolve("P1");
+const pr2 = Promise.resolve("P2");
+const pr3 = Promise.resolve("P3");
 
 // Waits for ALL to resolve. If ONE rejects, the whole Promise.all rejects immediately.
-Promise.all([p1, p2, p3])
+Promise.all([pr1, pr2, pr3])
   .then((results) => {
     console.log("Promise.all:", results); // ["P1", "P2", "P3"]
   })
