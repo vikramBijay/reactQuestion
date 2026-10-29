@@ -222,17 +222,20 @@ const contentEl = document.getElementById('content');
 function buildCard(it){
   const key = cardKey(it);
   const isReviewed = reviewed.has(key);
+  const isDeepDive = !!it.deep_dive;
   const card = document.createElement('div');
-  card.className = `card ${it.source}${isReviewed ? ' reviewed' : ''}`;
+  card.className = `card ${it.source}${isDeepDive ? ' is-deep-dive' : ''}${isReviewed ? ' reviewed' : ''}`;
   card.dataset.key = key;
   card.dataset.search = (it.question_hi + ' ' + it.answer_hi + ' ' + it.question_en + ' ' + it.answer_en).toLowerCase();
 
   const head = document.createElement('div');
   head.className = 'card-head';
+  const deepDiveTag = isDeepDive ? `<span class="badge deep-dive"><span class="deep-dive-dot"></span>Deep Dive</span>` : '';
   head.innerHTML = `
     <span class="card-num">${it.num ? '#'+it.num : '★'}</span>
-    <span class="card-q">${q(it)}</span>
+    <span class="card-q ${isDeepDive ? 'deep-dive-title' : ''}">${q(it)}</span>
     <span class="card-meta">
+      ${deepDiveTag}
       <span class="badge ${it.source}">${it.source==='doc' ? 'your doc' : 'added'}</span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </span>`;
@@ -315,7 +318,14 @@ function buildCard(it){
 }
 
 function renderContent(){
-  const CATS = [...new Set(DATA.filter(it => it.topic === TOPIC).map(it => it.category))];
+  const brandSub = document.querySelector('.brand .sub');
+  if (brandSub) brandSub.textContent = '/' + TOPIC;
+  const topicData = DATA.filter(it => it.topic === TOPIC);
+  const countDisplay = document.querySelector('.rail div[style*="monospace"]');
+  if (countDisplay) {
+    countDisplay.textContent = `${topicData.length} cards · doc + added answers`;
+  }
+  const CATS = [...new Set(topicData.map(it => it.category))];
   renderSidebar(CATS);
   contentEl.innerHTML = '';
   const fragment = document.createDocumentFragment();
